@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CEBD13BA-58AB-4983-8281-2FD4A23876F5}</ProjectGuid>
-    <RootNamespace>C09_SimplexBase</RootNamespace>
-    <ProjectName>C09_SimplexBase</ProjectName>
+    <ProjectGuid>{FD4711C7-230D-4460-BA1F-E79E0277F39A}</ProjectGuid>
+    <RootNamespace>E05_Translations</RootNamespace>
+    <ProjectName>E05_Translations</ProjectName>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -107,7 +107,7 @@ xcopy "$(SolutionDir)include\Simplex\Shaders" "$(SolutionDir)_Binary\Shaders" /y
     <ClCompile Include="AppClassMain.cpp" />
     <ClCompile Include="ControllerConfiguration.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="myMesh.cpp" />
+    <ClCompile Include="MyMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\imgui\imconfig.h" />
@@ -119,7 +119,7 @@ xcopy "$(SolutionDir)include\Simplex\Shaders" "$(SolutionDir)_Binary\Shaders" /y
     <ClInclude Include="ControllerConfiguration.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="myMesh.h" />
+    <ClInclude Include="MyMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc" />
