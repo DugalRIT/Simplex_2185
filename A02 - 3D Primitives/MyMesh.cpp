@@ -280,10 +280,10 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		vector3 point0(0, 0, 0);
-		vector3 point1(a_fRadius * cos(angle * static_cast<float>(i)), a_fRadius * sin(angle * static_cast<float>(i)), 0);
-		vector3 point2(a_fRadius * cos(angle * static_cast<float>(i + 1)), a_fRadius * sin(angle * static_cast<float>(i + 1)), 0);
-		vector3 point3(0, 0, a_fHeight);
+		vector3 point0(0, 0, a_fHeight / 2);
+		vector3 point1(a_fRadius * cos(angle * static_cast<float>(i)), a_fRadius * sin(angle * static_cast<float>(i)), a_fHeight / 2);
+		vector3 point2(a_fRadius * cos(angle * static_cast<float>(i + 1)), a_fRadius * sin(angle * static_cast<float>(i + 1)), a_fHeight / 2);
+		vector3 point3(0, 0, a_fHeight / 2 * -1);
 
 		AddTri(point3, point1, point2);
 		AddTri(point2, point1, point0);
@@ -313,16 +313,22 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	// Replace this with your code
 
 	float angle = PI * 2 / a_nSubdivisions;
+	float halfHeight = a_fHeight / 2;
 
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		vector3 point0(0, 0, 0);
-		vector3 point1(a_fRadius * cos(angle * static_cast<float>(i)), a_fRadius * sin(angle * static_cast<float>(i)), 0);
-		vector3 point2(a_fRadius * cos(angle * static_cast<float>(i + 1)), a_fRadius * sin(angle * static_cast<float>(i + 1)), 0);
+		vector3 point0(0, 0, halfHeight);
+		vector3 point1(a_fRadius * cos(angle * static_cast<float>(i)), a_fRadius * sin(angle * static_cast<float>(i)), halfHeight);
+		vector3 point2(a_fRadius * cos(angle * static_cast<float>(i + 1)), a_fRadius * sin(angle * static_cast<float>(i + 1)), halfHeight);
 
-		AddTri(point2, point1, point0);
-		AddTri(point0 + vector3(0, 0, a_fHeight), point1 + vector3(0, 0, a_fHeight), point2 + vector3(0, 0, a_fHeight));
-		AddQuad(point1, point2, point1 + vector3(0, 0, a_fHeight), point2 + vector3(0, 0, a_fHeight));
+		vector3 point3(0, 0, (halfHeight * -1));
+		vector3 point4(a_fRadius * cos(angle * static_cast<float>(i)), a_fRadius * sin(angle * static_cast<float>(i)), (halfHeight * -1));
+		vector3 point5(a_fRadius * cos(angle * static_cast<float>(i + 1)), a_fRadius * sin(angle * static_cast<float>(i + 1)), (halfHeight * -1));
+
+		AddTri(point0, point1, point2);
+		AddTri(point5, point4, point3);
+		AddQuad(point4, point5, point1, point2);
+		
 	}
 	// -------------------------------
 
@@ -355,20 +361,27 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 	// Replace this with your code
 
 	float angle = PI * 2 / a_nSubdivisions;
+	float halfHeight = a_fHeight / 2;
 
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		vector3 point0(0, 0, 0);
-		vector3 point1(a_fOuterRadius * cos(angle * static_cast<float>(i)), a_fOuterRadius * sin(angle * static_cast<float>(i)), 0);
-		vector3 point2(a_fOuterRadius * cos(angle * static_cast<float>(i + 1)), a_fOuterRadius * sin(angle * static_cast<float>(i + 1)), 0);
-		vector3 point3(a_fInnerRadius * cos(angle * static_cast<float>(i)), a_fInnerRadius * sin(angle * static_cast<float>(i)), 0);
-		vector3 point4(a_fInnerRadius * cos(angle * static_cast<float>(i + 1)), a_fInnerRadius * sin(angle * static_cast<float>(i + 1)), 0);
+		vector3 point0(0, 0, halfHeight);
+		vector3 point1(a_fOuterRadius * cos(angle * static_cast<float>(i)), a_fOuterRadius * sin(angle * static_cast<float>(i)), halfHeight);
+		vector3 point2(a_fOuterRadius * cos(angle * static_cast<float>(i + 1)), a_fOuterRadius * sin(angle * static_cast<float>(i + 1)), halfHeight);
+		vector3 point3(a_fInnerRadius * cos(angle * static_cast<float>(i)), a_fInnerRadius * sin(angle * static_cast<float>(i)), halfHeight);
+		vector3 point4(a_fInnerRadius * cos(angle * static_cast<float>(i + 1)), a_fInnerRadius * sin(angle * static_cast<float>(i + 1)), halfHeight);
+
+		vector3 point5(0, 0, halfHeight);
+		vector3 point6(a_fOuterRadius * cos(angle * static_cast<float>(i)), a_fOuterRadius * sin(angle * static_cast<float>(i)), (halfHeight * -1));
+		vector3 point7(a_fOuterRadius * cos(angle * static_cast<float>(i + 1)), a_fOuterRadius * sin(angle * static_cast<float>(i + 1)), (halfHeight * -1));
+		vector3 point8(a_fInnerRadius * cos(angle * static_cast<float>(i)), a_fInnerRadius * sin(angle * static_cast<float>(i)), (halfHeight * -1));
+		vector3 point9(a_fInnerRadius * cos(angle * static_cast<float>(i + 1)), a_fInnerRadius * sin(angle * static_cast<float>(i + 1)), (halfHeight * -1));
 
 
-		AddQuad(point4, point2, point3, point1);
-		AddQuad(point3 + vector3(0, 0, a_fHeight), point1 + vector3(0, 0, a_fHeight), point4 + vector3(0, 0, a_fHeight), point2 + vector3(0, 0, a_fHeight));
-		AddQuad(point2, point2 + vector3(0, 0, a_fHeight), point1, point1 + vector3(0, 0, a_fHeight));
-		AddQuad(point3, point3 + vector3(0, 0, a_fHeight), point4, point4 + vector3(0, 0, a_fHeight));
+		AddQuad(point1, point2, point3, point4);
+		AddQuad(point9, point7, point8, point6);
+		AddQuad(point3, point4, point8, point9);
+		AddQuad(point6, point7, point1, point2);
 
 	}
 	// -------------------------------
@@ -409,6 +422,7 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	CompleteMesh(a_v3Color);
 	CompileOpenGL3X();
 }
+
 void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Color)
 {
 	if (a_fRadius < 0.01f)
@@ -420,8 +434,8 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 		GenerateCube(a_fRadius * 2.0f, a_v3Color);
 		return;
 	}
-	//if (a_nSubdivisions > 6)
-	//	a_nSubdivisions = 6;
+	if (a_nSubdivisions % 2 != 0)
+		a_nSubdivisions = a_nSubdivisions + 1;
 
 	Release();
 	Init();
@@ -429,78 +443,45 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	// Replace this with your code
 	float angle = PI * 2 / a_nSubdivisions;
 
-	//Top Point
-	//vector3 point0(0, 0, a_fRadius);
-	//Bottom point
-	//vector3 point(0, 0, a_fRadius * -1);
-	vector3 sphereCenter(0);
+	float subdivisionsFloat = static_cast<float>(a_nSubdivisions);
+	vector3 topPoint(0,0,a_fRadius);
+	vector3 bottomPoint(0, 0, a_fRadius * -1);
 
-	for (int i = 1; i <= a_nSubdivisions / 2; i++)
+	for (int i = 0; i < ((a_nSubdivisions / 2) + 1) ; i++)
 	{
 
-		float outerTopRingHeight = a_fRadius * 2 / a_nSubdivisions * i;
-		float outerBottomRingHeight = a_fRadius* 2 / a_nSubdivisions * i * -1;
-		float innerTopRingHeight = a_fRadius * 2 / a_nSubdivisions * (i-1);
-		float innerBottomRingHeight = a_fRadius * 2 / a_nSubdivisions * (i-1) * -1;
+		float outerTopRingHeight;
+		float outerBottomRingHeight;
+		float innerTopRingHeight;
+		float innerBottomRingHeight;
 
-		vector3 point0(0, 0, outerTopRingHeight);
-		vector3 point1(0, 0, outerBottomRingHeight);
+		outerTopRingHeight = a_fRadius * 2 / a_nSubdivisions * i;
+		outerBottomRingHeight = a_fRadius * 2 / a_nSubdivisions * i * -1;
+		innerTopRingHeight = a_fRadius * 2 / a_nSubdivisions * (i - 1);
+		innerBottomRingHeight = a_fRadius * 2 / a_nSubdivisions * (i - 1) * -1;
 
 		for (int j = 0; j < a_nSubdivisions; j++)
 		{
-			float innerRingRadius = a_fRadius - (a_fRadius / a_nSubdivisions / 2 * i);
-			float outerRingRadius = a_fRadius - (a_fRadius / a_nSubdivisions / 2 * (i + 1));
-			
-			//First pass - lines on either side of equator
-			if (i == 1)
-			{
-				vector3 point2(a_fRadius * cos(angle * static_cast<float>(j)), a_fRadius * sin(angle * static_cast<float>(j)), 0);
-				vector3 point3(a_fRadius * cos(angle * static_cast<float>(j + 1)), a_fRadius * sin(angle * static_cast<float>(j + 1)), 0);
+			float innerRingRadius = sqrt((pow(a_fRadius, 2) - pow((innerTopRingHeight), 2)));
+			float outerRingRadius = sqrt((pow(a_fRadius, 2) - pow(outerTopRingHeight, 2)));
 
-				vector3 point4(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), outerTopRingHeight);
-				vector3 point5(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), outerTopRingHeight);
+			vector3 point0(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), innerTopRingHeight);
+			vector3 point1(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), innerTopRingHeight);
 
-				vector3 point6(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), outerBottomRingHeight);
-				vector3 point7(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), outerBottomRingHeight);
+			vector3 point2(outerRingRadius * cos(angle * static_cast<float>(j)), outerRingRadius * sin(angle * static_cast<float>(j)), outerTopRingHeight);
+			vector3 point3(outerRingRadius * cos(angle * static_cast<float>(j + 1)), outerRingRadius * sin(angle * static_cast<float>(j + 1)), outerTopRingHeight);
 
-				AddQuad(point2, point3, point4, point5);
-				AddQuad(point6, point7, point2, point3);
-			}
-			//Last Pass 
-			else if (i == a_nSubdivisions)
-			{
+			vector3 point4(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), innerBottomRingHeight);
+			vector3 point5(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), innerBottomRingHeight);
 
-			}
-			//Middle passes
-			else
-			{
-				//Inner rings
+			vector3 point6(outerRingRadius * cos(angle * static_cast<float>(j)), outerRingRadius * sin(angle * static_cast<float>(j)), outerBottomRingHeight);
+			vector3 point7(outerRingRadius * cos(angle * static_cast<float>(j + 1)), outerRingRadius * sin(angle * static_cast<float>(j + 1)), outerBottomRingHeight);
 
-				vector3 point9(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), innerTopRingHeight);
-				vector3 point10(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), innerTopRingHeight);
-
-				vector3 point11(innerRingRadius * cos(angle * static_cast<float>(j)), innerRingRadius * sin(angle * static_cast<float>(j)), innerBottomRingHeight);
-				vector3 point12(innerRingRadius * cos(angle * static_cast<float>(j + 1)), innerRingRadius * sin(angle * static_cast<float>(j + 1)), innerBottomRingHeight);
-
-				//Outer Rings
-
-				vector3 point13(outerRingRadius * cos(angle * static_cast<float>(j)), outerRingRadius * sin(angle * static_cast<float>(j)), outerTopRingHeight);
-				vector3 point14(outerRingRadius * cos(angle * static_cast<float>(j + 1)), outerRingRadius * sin(angle * static_cast<float>(j + 1)), outerTopRingHeight);
-
-				vector3 point15(outerRingRadius * cos(angle * static_cast<float>(j)), outerRingRadius * sin(angle * static_cast<float>(j)), outerBottomRingHeight);
-				vector3 point16(outerRingRadius * cos(angle * static_cast<float>(j + 1)), outerRingRadius * sin(angle * static_cast<float>(j + 1)), outerBottomRingHeight);
-
-
-
-
-				AddQuad(point9, point10, point13, point14);
-				//AddQuad(point6, point7, point11, point12);
-			}
-
+			AddQuad(point0, point1, point2, point3);
+			AddQuad(point6, point7, point4, point5);
 
 		}
 	}
-
 	// -------------------------------
 
 	// Adding information about color
