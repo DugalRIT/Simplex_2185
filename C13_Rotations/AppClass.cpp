@@ -34,12 +34,12 @@ void Application::Display(void)
 	float fTimer = m_pSystem->GetTimeSinceStart(uClock);
 	matrix4 m4Translation = glm::translate(vector3(1.0f, 0.0f, 0.0f));
 
-	matrix4 m4Rot = glm::rotate(IDENTITY_M4, glm::radians(fTimer * 60.0f), AXIS_Z);
-	matrix4 m4RotInv = glm::rotate(IDENTITY_M4, glm::radians(fTimer * -60.0f), AXIS_Z);
+	//matrix4 m4Rot = glm::rotate(IDENTITY_M4, glm::radians(fTimer * 60.0f), AXIS_Z);
+	//matrix4 m4RotInv = glm::rotate(IDENTITY_M4, glm::radians(fTimer * -60.0f), AXIS_Z);
 
 	//m4Model = m4Rot * m4Translation *m4RotInv;
 	//m4Model = m4Rot * m4Translation * glm::inverse(m4Rot);
-	m4Model = m4Rot * m4Translation * glm::transpose(m4Rot);
+	//m4Model = m4Rot * m4Translation * glm::transpose(m4Rot);
 
 
 	//calculate the current position
@@ -55,8 +55,18 @@ void Application::Display(void)
 	m4Model = m4TransInverse * m4Rotation * m4Translation;
 	*/
 
+	glm::quat q1 = glm::angleAxis(glm::radians(0.0f), AXIS_Z);
+	quaternion q2 = glm::angleAxis(glm::radians(90.0f), AXIS_Z);
+
+	float fTotalTime = 2.0f;
+	float fPercentage = MapValue(fTimer, 0.0f, fTotalTime, 0.0f, 1.0f);
+	quaternion q3 = glm::mix(q1, q2, fPercentage);
+	//quaternion q3 = q1 * q2;
+
+
+
 	// render the object
-	m_pMesh->Render(m4Projection, m4View, m4Model);
+	m_pMesh->Render(m4Projection, m4View, ToMatrix4(q3));
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
