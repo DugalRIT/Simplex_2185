@@ -22,6 +22,17 @@ void Application::Display(void)
 	// Clear the screen
 	ClearScreen();
 
+
+	// For homework
+	// make v3Eye member variable then change x/y/z in appcontrols 
+	//vector3 v3Eye = vector3(0.0f, 10.0f, 0.0f);
+
+
+	//vector3 v3Center = v3Eye + vector3(0.0f, 0.0f, -1.0f);
+	//vector3 v3Up = vector3(0.0f, 1.0f, 0.0f);
+
+	//matrix4 m4View = glm::lookAt(v3Eye, v3Center, v3Up);
+
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 
