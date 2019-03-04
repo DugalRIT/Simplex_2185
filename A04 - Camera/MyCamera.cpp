@@ -186,10 +186,9 @@ void MyCamera::ChangeYaw(float yAngle = 0.0f)
 	quaternion qYawAngle = glm::angleAxis(glm::radians(yAngle), vector3(0.0f, 1.0f, 0.0f));
 	// Rotate directional vector between position and target then apply to target vector
 	m_v3Target = m_v3Position + glm::rotate(qYawAngle, m_v3Position - m_v3Target);
-	// Update forward, right, and up vectors
+	// Update forward and right vectors
 	m_v3Forward = glm::normalize(m_v3Position - m_v3Target);
-	m_v3Right = glm::normalize(glm::rotate(m_v3Forward, glm::radians(-90.0f), vector3(0.0f, 1.0f, 0.0f)));
-	m_v3Up = glm::normalize(glm::rotate(m_v3Forward, glm::radians(90.0f), vector3(1.0f, 0.0f, 0.0f)));
+	m_v3Right = glm::normalize(glm::rotate(vector3(m_v3Forward.x, 0.0f, m_v3Forward.z), glm::radians(-90.0f), vector3(0.0f, 1.0f, 0.0f)));
 }
 
 void MyCamera::ChangePitch(float xAngle = 0.0f)
@@ -197,5 +196,5 @@ void MyCamera::ChangePitch(float xAngle = 0.0f)
 	// Create quaternion around x axis based on mouse position passed in as parameter
 	quaternion qPitchAngle = glm::angleAxis(glm::radians(xAngle), m_v3Right);
 	// Rotate directional vector between position and target the apply to target vector
-	m_v3Target = m_v3Position + glm::rotate(qPitchAngle, m_v3Position - m_v3Target); 
+	m_v3Target = m_v3Position + glm::rotate(qPitchAngle, m_v3Position - m_v3Target);
 }

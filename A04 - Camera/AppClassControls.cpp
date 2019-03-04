@@ -397,9 +397,9 @@ void Application::ProcessKeyboard(void)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		m_pCamera->MoveSideways(-fSpeed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		m_pCamera->MoveVertical(fSpeed);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 		m_pCamera->MoveVertical(-fSpeed);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		m_pCamera->MoveVertical(fSpeed);
 
 #pragma endregion
 }
