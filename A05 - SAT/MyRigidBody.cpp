@@ -276,17 +276,106 @@ void MyRigidBody::AddToRenderList(void)
 
 uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 {
-	/*
-	Your code goes here instead of this comment;
+	// Declare variables for radii and rotation matrices
+	float radiusA, radiusB;
+	matrix3 R, AbsR;
+	
+	// Set axis for this rb and passed in rb
+	vector3 a_axis[3] = {
+		this->GetModelMatrix()[0],
+		this->GetModelMatrix()[1],
+		this->GetModelMatrix()[2]
+	};
 
-	For this method, if there is an axis that separates the two objects
-	then the return will be different than 0; 1 for any separating axis
-	is ok if you are not going for the extra credit, if you could not
-	find a separating axis you need to return 0, there is an enum in
-	Simplex that might help you [eSATResults] feel free to use it.
-	(eSATResults::SAT_NONE has a value of 0)
-	*/
+	vector3 b_axis[3] = {
+		a_pOther->GetModelMatrix()[0],
+		a_pOther->GetModelMatrix()[1],
+		a_pOther->GetModelMatrix()[2]
+	};
 
-	//there is no axis test that separates this two objects
-	return eSATResults::SAT_NONE;
+	// Compute rotation matrix 
+	for (uint i = 0; i < 3; i++) 
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			R[i][j] = glm::dot(this->GetModelMatrix()[i], a_pOther->GetModelMatrix()[j]);
+		}
+	}
+
+	// Compute translation vector
+	vector3 t = a_pOther->GetCenterGlobal() - this->GetCenterGlobal();
+
+	t = vector3(glm::dot(t, a_axis[0]), glm::dot(t, a_axis[1]), glm::dot(t, a_axis[2]));
+
+	// Add epsilon
+	for (uint i = 0; i < 3; i++) 
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			AbsR[i][j] = glm::abs(R[i][j] + epsilon);
+		}
+	}
+
+	// Test x, y, z axis of object a
+	for (uint i = 0; i < 3; i++)
+	{
+		radiusA = this->GetHalfWidth()[i];
+		radiusB = a_pOther->GetHalfWidth()[0] * AbsR[i][0] + a_pOther->GetHalfWidth()[1] * AbsR[i][1] + a_pOther->GetHalfWidth()[2] * AbsR[i][2];
+		if (glm::abs(t[i]) > radiusA + radiusB) return 1;
+	}
+
+	// Test x, y, z axis of object b
+	for (uint i = 0; i < 3; i++)
+	{
+		radiusA = this->GetHalfWidth()[0] * AbsR[0][i] + this->GetHalfWidth()[1] * AbsR[1][i] + this->GetHalfWidth()[2] * AbsR[2][i];
+		radiusB = a_pOther->GetHalfWidth()[i];
+		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > radiusA + radiusB) return 1;
+	}
+
+	// Test axis L = A0 x B0
+	radiusA = this->GetHalfWidth()[1] * AbsR[2][0] + this->GetHalfWidth()[2] * AbsR[1][0];
+	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[0][1];
+	if (glm::abs(t[2] * R[1][0] - t[1] * R[2][0]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A0 x B1
+	radiusA = this->GetHalfWidth()[1] * AbsR[2][1] + this->GetHalfWidth()[2] * AbsR[1][1];
+	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[0][0];
+	if (glm::abs(t[2] * R[1][1] - t[1] * R[2][1]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A0 x B2
+	radiusA = this->GetHalfWidth()[1] * AbsR[2][2] + this->GetHalfWidth()[2] * AbsR[1][2];
+	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][1] + a_pOther->GetHalfWidth()[1] * AbsR[0][0];
+	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A1 x B0
+	radiusA = this->GetHalfWidth()[0] * AbsR[2][0] + this->GetHalfWidth()[2] * AbsR[0][0];
+	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[1][1];
+	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A1 x B1
+	radiusA = this->GetHalfWidth()[0] * AbsR[2][1] + this->GetHalfWidth()[2] * AbsR[0][1];
+	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[1][2] + a_pOther->GetHalfWidth()[2] * AbsR[1][0];
+	if (glm::abs(t[0] * R[2][1] - t[2] * R[0][1]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A1 x B2
+	radiusA = this->GetHalfWidth()[0] * AbsR[2][2] + this->GetHalfWidth()[2] * AbsR[0][2];
+	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[1][1] + a_pOther->GetHalfWidth()[1] * AbsR[1][0];
+	if (glm::abs(t[0] * R[2][2] - t[2] * R[0][2]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A2 x B0
+	radiusA = this->GetHalfWidth()[0] * AbsR[1][0] + this->GetHalfWidth()[1] * AbsR[0][0];
+	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[2][2] + a_pOther->GetHalfWidth()[2] * AbsR[2][1];
+	if (glm::abs(t[1] * R[0][0] - t[0] * R[1][0]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A2 x B1
+	radiusA = this->GetHalfWidth()[0] * AbsR[1][1] + this->GetHalfWidth()[1] * AbsR[0][1];
+	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[2][2] + a_pOther->GetHalfWidth()[2] * AbsR[2][0];
+	if (glm::abs(t[1] * R[0][1] - t[0] * R[1][1]) > radiusA + radiusB) return 1;
+
+	// Test axis L = A2 x B2
+	radiusA = this->GetHalfWidth()[0] * AbsR[1][2] + this->GetHalfWidth()[1] * AbsR[0][2];
+	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[2][1] + a_pOther->GetHalfWidth()[1] * AbsR[2][0];
+	if (glm::abs(t[1] * R[0][2] - t[0] * R[1][2]) > radiusA + radiusB) return 1;
+
+	return 0;
 }
