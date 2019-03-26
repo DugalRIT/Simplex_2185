@@ -332,47 +332,47 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > radiusA + radiusB) return 1;
 	}
 
-	// Test axis L = A0 x B0
+	// Test axis that is cross product between x axis of object a and x axis of object b
 	radiusA = this->GetHalfWidth()[1] * AbsR[2][0] + this->GetHalfWidth()[2] * AbsR[1][0];
 	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[0][1];
 	if (glm::abs(t[2] * R[1][0] - t[1] * R[2][0]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A0 x B1
+	// Test axis that is cross product between x axis of object a and y axis of object b
 	radiusA = this->GetHalfWidth()[1] * AbsR[2][1] + this->GetHalfWidth()[2] * AbsR[1][1];
 	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[0][0];
 	if (glm::abs(t[2] * R[1][1] - t[1] * R[2][1]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A0 x B2
+	// Test axis that is cross product between x axis of object a and z axis of object b
 	radiusA = this->GetHalfWidth()[1] * AbsR[2][2] + this->GetHalfWidth()[2] * AbsR[1][2];
 	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][1] + a_pOther->GetHalfWidth()[1] * AbsR[0][0];
 	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A1 x B0
+	// Test axis that is cross product between y axis of object a and x axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[2][0] + this->GetHalfWidth()[2] * AbsR[0][0];
 	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[0][2] + a_pOther->GetHalfWidth()[2] * AbsR[1][1];
 	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A1 x B1
+	// Test axis that is cross product between y axis of object a and y axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[2][1] + this->GetHalfWidth()[2] * AbsR[0][1];
 	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[1][2] + a_pOther->GetHalfWidth()[2] * AbsR[1][0];
 	if (glm::abs(t[0] * R[2][1] - t[2] * R[0][1]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A1 x B2
+	// Test axis that is cross product between y axis of object a and z axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[2][2] + this->GetHalfWidth()[2] * AbsR[0][2];
 	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[1][1] + a_pOther->GetHalfWidth()[1] * AbsR[1][0];
 	if (glm::abs(t[0] * R[2][2] - t[2] * R[0][2]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A2 x B0
+	// Test axis that is cross product between z axis of object a and x axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[1][0] + this->GetHalfWidth()[1] * AbsR[0][0];
 	radiusB = a_pOther->GetHalfWidth()[1] * AbsR[2][2] + a_pOther->GetHalfWidth()[2] * AbsR[2][1];
 	if (glm::abs(t[1] * R[0][0] - t[0] * R[1][0]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A2 x B1
+	// Test axis that is cross product between z axis of object a and y axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[1][1] + this->GetHalfWidth()[1] * AbsR[0][1];
 	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[2][2] + a_pOther->GetHalfWidth()[2] * AbsR[2][0];
 	if (glm::abs(t[1] * R[0][1] - t[0] * R[1][1]) > radiusA + radiusB) return 1;
 
-	// Test axis L = A2 x B2
+	// Test axis that is cross product between z axis of object a and z axis of object b
 	radiusA = this->GetHalfWidth()[0] * AbsR[1][2] + this->GetHalfWidth()[1] * AbsR[0][2];
 	radiusB = a_pOther->GetHalfWidth()[0] * AbsR[2][1] + a_pOther->GetHalfWidth()[1] * AbsR[2][0];
 	if (glm::abs(t[1] * R[0][2] - t[0] * R[1][2]) > radiusA + radiusB) return 1;
