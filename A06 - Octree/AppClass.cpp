@@ -1,4 +1,5 @@
 #include "AppClass.h"
+#include "MyOctant.h"
 using namespace Simplex;
 void Application::InitVariables(void)
 {
@@ -29,11 +30,13 @@ void Application::InitVariables(void)
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
-	m_uOctantLevels = 1;
+	//m_uOctantLevels = 0;
+	//m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
 }
 void Application::Update(void)
 {
+
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->Update();
 
@@ -44,18 +47,42 @@ void Application::Update(void)
 	CameraRotation();
 	
 	//Update Entity Manager
-	m_pEntityMngr->Update();
+	//m_pEntityMngr->Update();
+
+	if (octreeActive)
+	{
+		octree->checkCollisions();
+	}
+	else 
+	{
+		m_pEntityMngr->Update();
+	}
+
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
+
+
 }
 void Application::Display(void)
 {
 	// Clear the screen
 	ClearScreen();
 
+
+	if (octree != nullptr)
+	{
+		if (octreeVisible)
+		{
+			octree->Display();
+		}
+	}
+
 	//display octree
-	//m_pRoot->Display();
+	//if (m_uOctantID == -1)
+	//	m_pRoot->Display();
+	//else
+	//m_pRoot->Display(m_uOctantID);
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
@@ -74,6 +101,9 @@ void Application::Display(void)
 }
 void Application::Release(void)
 {
+	//Release octree
+	//SafeDelete(m_pRoot);
+
 	//release GUI
 	ShutdownGUI();
 }
